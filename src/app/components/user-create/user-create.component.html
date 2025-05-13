@@ -1,0 +1,73 @@
+<!-- Modal Structure -->
+<div class="modal fade show" style="display: block;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Ajouter un Utilisateur</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Fermer" (click)="closeModal.emit()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <label for="prenom">Prénom *</label>
+            <input type="text" class="form-control" id="prenom" formControlName="prenom">
+            <div *ngIf="userForm.get('prenom')?.invalid && userForm.get('prenom')?.touched">
+              <small class="text-danger" *ngIf="userForm.get('prenom')?.errors?.['required']">Prénom requis.</small>
+              <small class="text-danger" *ngIf="userForm.get('prenom')?.errors?.['pattern']">Prénom invalide.</small>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="nom">Nom *</label>
+            <input type="text" class="form-control" id="nom" formControlName="nom">
+            <div *ngIf="userForm.get('nom')?.invalid && userForm.get('nom')?.touched">
+              <small class="text-danger" *ngIf="userForm.get('nom')?.errors?.['required']">Nom requis.</small>
+              <small class="text-danger" *ngIf="userForm.get('nom')?.errors?.['pattern']">Nom invalide.</small>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="email">Email *</label>
+            <input type="email" class="form-control" id="email" formControlName="email">
+            <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched">
+              <small class="text-danger" *ngIf="userForm.get('email')?.errors?.['required']">Email requis.</small>
+              <small class="text-danger" *ngIf="userForm.get('email')?.errors?.['email']">Email invalide.</small>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="telephone">Téléphone *</label>
+            <input type="number" class="form-control" id="telephone" formControlName="telephone">
+            <div *ngIf="userForm.get('telephone')?.invalid && userForm.get('telephone')?.touched">
+              <small class="text-danger" *ngIf="userForm.get('telephone')?.errors?.['required']">Téléphone requis.</small>
+              <small class="text-danger" *ngIf="userForm.get('telephone')?.errors?.['min']">Téléphone doit être supérieur à 700000000.</small>
+              <small class="text-danger" *ngIf="userForm.get('telephone')?.errors?.['max']">Téléphone doit être inférieur à 789999999.</small>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="role">Role *</label>
+            <select class="form-control" id="role" formControlName="role">
+              <option value="administrateur">Administrateur</option>
+              <option value="agent">Agent</option>
+            </select>
+          </div>
+          <div class="form-group" *ngIf="showOrganismeField">
+            <label for="organisme">Organisme *</label>
+            <select class="form-control" id="organisme" formControlName="organisme">
+              <option value="">Sélectionnez un organisme</option>
+              <option value="police">Police</option>
+              <option value="gendarmerie">Gendarmerie</option>
+              <option value="ambulance">Ambulance</option>
+            </select>
+            <div *ngIf="userForm.get('organisme')?.invalid ">
+              <small class="text-danger" *ngIf="userForm.get('organisme')?.errors?.['required']">Organisme requis.</small>
+            </div>
+          </div>
+          <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-danger" (click)="closeModal.emit()">ANNULER</button>
+            <button type="submit" class="btn btn-success">VALIDER</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

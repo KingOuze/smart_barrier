@@ -1,0 +1,38 @@
+<div class="flex h-screen">
+    <!-- Sidebar -->
+    <app-sidebar class="w-1/6 h-full"></app-sidebar>
+  
+    <!-- Main Content -->
+    <div class="w-5/6 p-4 bg-gray-100 overflow-auto">
+      <!-- Top Bar -->
+      <app-top-bar></app-top-bar>
+
+          <!-- Actions -->
+          <div class="actions mt-4">
+            <!-- boutton pour retourner a l'historique -->
+             <div>
+              <button class="btn btn-primary mt-4" (click)="goBack()">Retour</button>
+            </div>
+            <h4 class="text-lg font-semibold mb-2">Actions</h4>
+            <div class="overflow-x-auto">
+              <table class="event-table min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+                <thead>
+                  <tr class="table-header text-left">
+                    <th class="table-cell py-3 px-4 border-b border-gray-200 bg-gray-100 text-xs font-semibold text-gray-600 uppercase tracking-wider">Type</th>
+                    <th class="table-cell py-3 px-4 border-b border-gray-200 bg-gray-100 text-xs font-semibold text-gray-600 uppercase tracking-wider">Date/Heure</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngFor="let action of logDetails">
+                    <tr class="table-row">
+                      <td class="table-cell py-3 px-4 border-b border-gray-200 bg-white text-sm">{{ action.type }}</td>
+                      <td class="table-cell py-3 px-4 border-b border-gray-200 bg-white text-sm">{{ action.timestamp | date : "dd MMMM yyyy, HH:mm:ss" }}</td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+  

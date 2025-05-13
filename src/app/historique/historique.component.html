@@ -1,0 +1,120 @@
+<div class="flex h-screen">
+  <!-- Sidebar -->
+  <app-sidebar class="w-1/6 h-full"></app-sidebar>
+
+  <!-- Main Content -->
+  <div class="w-5/6 p-4 bg-gray-100 overflow-auto">
+    <!-- Top Bar -->
+    <app-top-bar></app-top-bar>
+
+    <div class="container mx-auto">
+      <!-- Filters -->
+      <div class="filters mt-4 space-y-2">
+        <!-- Vos champs de filtre ici -->
+      </div>
+
+      <!-- User Logs -->
+      <div class="user-logs mt-4">
+        <h3 class="title text-xl font-semibold mb-4">Historiques des Actions</h3>
+        <div class="overflow-x-auto">
+          <table class="event-table min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+            <thead>
+              <tr class="table-header text-left bg-gray-100">
+                <th class="p-3">Prénom</th>
+                <th class="p-3">Nom</th>
+                <th class="p-3">Dernière Connexion</th>
+                <th class="p-3">Sessions</th>
+                <th class="p-3">Actions totales</th>
+                <th class="p-3">Détails</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let userSession of paginatedUserSessions">
+                <!-- Ligne utilisateur -->
+                <tr class="user-row hover:bg-gray-50">
+                  <td class="p-3">{{ userSession.userDetails.prenom }}</td>
+                  <td class="p-3">{{ userSession.userDetails.nom }}</td>
+                  <td class="p-3">{{ userSession.lastLogin | date : "dd/MM/yyyy HH:mm" }}</td>
+                  <td class="p-3">{{ userSession.sessions.length }}</td>
+                  <td class="p-3">{{ userSession.totalActions }}</td>
+                  <td class="p-3">
+                    <button (click)="toggleExpand(userSession.userId)" 
+                            class="text-blue-600 hover:text-blue-900 px-4 py-2 rounded">
+                      {{ expandedUsers[userSession.userId] ? 'Masquer' : 'Afficher' }}
+                    </button>
+                  </td>
+                </tr>
+
+                <!-- Détails dépliables -->
+                <tr *ngIf="expandedUsers[userSession.userId]" class="bg-gray-50">
+                  <td colspan="6" class="p-4">
+                    <div class="space-y-4">
+                      <div *ngFor="let session of userSession.sessions" class="border rounded-lg p-4 bg-white">
+                        <!-- En-tête session -->
+                        <div class="flex justify-between mb-2">
+                          <div>
+                            <span class="font-medium">Connexion:</span> 
+                            {{ session.loginTime | date : "dd/MM/yyyy HH:mm" }}
+                          </div>
+                          <div>
+                            <span class="font-medium">Déconnexion:</span> 
+                            {{ session.logoutTime ? (session.logoutTime | date : "dd/MM/yyyy HH:mm") : 'En cours...' }}
+                          </div>
+                        </div>
+
+                        <!-- Liste des actions -->
+                        <div *ngIf="session.actions?.length" class="mt-2">
+                          <div class="font-medium mb-2">Actions réalisées :</div>
+                          <div class="grid grid-cols-1 gap-2">
+                            <div *ngFor="let action of session.actions" class="bg-gray-50 p-3 rounded shadow">
+                              <div class="flex items-center justify-between">
+                                <div>
+                                  <span class="font-medium">{{ action.type | titlecase }}</span> - 
+                                  {{ action.entity }} 
+                                </div>
+                                <span class="text-sm text-gray-500">
+                                  {{ action.timestamp | date : "HH:mm:ss" }}
+                                </span>
+                              </div>
+                              <div *ngIf="action.details" class="text-sm text-gray-600 mt-1">
+                                Détails: {{ action.details }}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Aucune action -->
+                        <div *ngIf="!session.actions?.length" class="text-gray-500 text-sm">
+                          Aucune action réalisée pendant cette session
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-center mt-4">
+          <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+            <button class="px-4 py-2 border rounded-l-md"
+                    [disabled]="currentPage === 1"
+                    (click)="prevPage()">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <span class="px-4 py-2 border-t border-b">
+              Page {{ currentPage }} sur {{ Math.ceil(filteredUserSessions.length / itemsPerPage) }}
+            </span>
+            <button class="px-4 py-2 border rounded-r-md"
+                    [disabled]="currentPage * itemsPerPage >= filteredUserSessions.length"
+                    (click)="nextPage()">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

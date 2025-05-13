@@ -1,0 +1,14 @@
+<div class="sidebar">
+  <div class="logo">
+    <img src="logoSB.png" alt="Logo" class="logo-img">
+  </div>
+  <ul class="menu">
+    <li routerLink="/dashboard/admin" (click)="activateMenuItem($event)" ><span class="icon">🔄</span> Dashboard</li>
+    <li routerLink="/liste-utilisateurs" routerLinkActive="active" class="active" (click)="activateMenuItem($event)" *ngIf="isAdmin()"><span class="icon">👤</span> Administrateurs</li>
+    <li routerLink="/voiture" routerLinkActive="active" (click)="activateMenuItem($event)" *ngIf="isAdmin()"><span class="icon">🚨</span> Urgences</li>
+    <li  routerLink="/search" routerLinkActive="active" class="active"(click)="activateMenuItem($event)" ><span class="icon">📋</span> Plaques Volées</li>
+    <li  routerLink="/list-amendes" (click)="activateMenuItem($event)"><span class="icon">📋</span> Liste Amendes</li>
+    <li routerLink="/historiques" (click)="activateMenuItem($event)" *ngIf="isAdmin()"><span class="icon">📝</span> Historiques Logs</li>
+  </ul>
+  <button class="logout" (click)="logout()">DECONNEXION</button>
+</div>

@@ -1,0 +1,49 @@
+<div class="flex h-screen">
+  <!-- Sidebar -->
+  <app-sidebar class="w-1/6 h-full"></app-sidebar>
+
+  <!-- Main Content -->
+  <div class="w-5/6 p-4 bg-gray-100 overflow-auto">
+    <!-- Top Bar -->
+    <app-top-bar></app-top-bar>
+
+    <!-- Diagrammes -->
+    <div class="grid grid-cols-2 gap-6 mt-4">
+      <!-- Diagramme en barres -->
+      <div class="bg-white p-4 rounded-mg shadow-ld">
+        <h3 class="text-xl font-bold mb-4">Statistiques des Voitures</h3>
+        <ngx-charts-bar-vertical
+          [view]="[550, 400]"
+          [results]="barChartData"
+          [scheme]="colorScheme"
+          [legend]="true"
+          [legendTitle]="'Types de Voitures'"
+          [showXAxisLabel]="true"
+          [showYAxisLabel]="true"
+          [xAxisLabel]="'Type'"
+          [yAxisLabel]="'Nombre'"
+          [xAxis]="true"
+          [yAxis]="true">
+        </ngx-charts-bar-vertical>
+      </div>
+
+      <!-- Diagramme en courbes -->
+      <div class="bg-white p-4 rounded-lg shadow-md">
+        <h3 class="text-xl font-bold mb-4">Amendes par Jour</h3>
+        <ngx-charts-line-chart
+          [view]="[550, 400]"
+          [results]="lineChartData"
+          [scheme]="colorScheme"
+          [legend]="true"
+          [legendTitle]="'Amendes'"
+          [showXAxisLabel]="true"
+          [showYAxisLabel]="true"
+          [xAxisLabel]="'Jour'"
+           [yAxisLabel]="'Nombre d\'Amendes'"
+          [xAxis]="true"
+          [yAxis]="true">
+        </ngx-charts-line-chart>
+      </div>
+    </div>
+  </div>
+</div>

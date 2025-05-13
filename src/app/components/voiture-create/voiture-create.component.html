@@ -1,0 +1,54 @@
+<div class="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+  <div class="bg-white rounded-lg w-1/3">
+    <div class="p-4">
+      <div class="flex justify-between items-center border-b pb-2">
+        <h1 class="text-xl font-semibold">Créer une Voiture</h1>
+      </div>
+      <div class="mt-4">
+        <form [formGroup]="voitureForm" (ngSubmit)="onSubmit()" class="space-y-4 mt-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Plaque <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="plaque" class="mt-1 block w-full rounded-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="plaque" placeholder="e.g., AB123CD" (input)="formatPlaque($event)">
+            <div *ngIf="plaque?.invalid && (plaque?.dirty || plaque?.touched)" class="text-red-500 text-sm mt-1">
+                <div *ngIf="plaque?.errors?.['required']">Plaque est requise.</div>
+                <div *ngIf="plaque?.errors?.['pattern']">Le numéro de la plaque doit être au format AB-123-CD ou AB-1234-CD.</div>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Modèle <span class="text-red-500">*</span></label>
+            <input type="text" class="mt-1 block w-full rounded-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="modele" formControlName="modele">
+            <div *ngIf="modele?.invalid && (modele?.dirty || modele?.touched)" class="text-red-500 text-sm mt-1">
+              Modèle est requis.
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Organisme <span class="text-red-500">*</span></label>
+            <select class="mt-1 block w-full rounded-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="organisme" formControlName="organisme">
+              <option value="" disabled>Sélectionnez un organisme</option>
+              <option value="police">Police</option>
+              <option value="gendarmerie">Gendarmerie</option>
+              <option value="ambulance">Ambulance</option>
+            </select>
+            <div *ngIf="organisme?.invalid && (organisme?.dirty || organisme?.touched)" class="text-red-500 text-sm mt-1">
+              Organisme est requis.
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Email <span class="text-red-500">*</span></label>
+            <input type="email" class="mt-1 block w-full rounded-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="contact" formControlName="contact">
+            <div *ngIf="contact?.invalid && (contact?.dirty || contact?.touched)" class="text-red-500 text-sm mt-1">
+              <div *ngIf="contact?.errors?.['required']">Email est requis.</div>
+              <div *ngIf="contact?.errors?.['email']">Veuillez entrer un format email valide.</div>
+            </div>
+          </div>
+          <div class="flex justify-between mt-6">
+            <button type="button" class="w-1/2 bg-red-600 text-white py-2 rounded-full mr-2" (click)="closeModal.emit()">Annuler</button>
+            <button type="submit" class="w-1/2 bg-green-600 text-white py-2 rounded-full ml-2" [disabled]="!isFormComplete()">Valider</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
+  </div>
+</div>

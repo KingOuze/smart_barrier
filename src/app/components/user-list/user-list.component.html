@@ -1,0 +1,109 @@
+<div class="flex h-screen">
+  <!-- Sidebar -->
+  <app-sidebar class="w-1/6 h-full"></app-sidebar>
+
+  <!-- Main Content -->
+  <div class="w-5/6 p-4 bg-gray-100 overflow-auto">
+      <!-- Top Bar -->
+    <app-top-bar></app-top-bar>
+
+    <div class="container mx-auto">
+      <!-- Search and Add Button -->
+      <!-- Search and Add Button -->
+      <div class="flex justify-between items-center mb-4">
+        <div class="relative w-full max-w-lg">
+          <input type="text" class="pl-10 pr-4 py-2 rounded-full shadow-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full" placeholder="Rechercher par nom, prénom, téléphone ou organisme" [(ngModel)]="searchQuery" (ngModelChange)="filterUsers()">
+          <i class="fas fa-search absolute left-3 top-2.5 text-gray-400"></i>
+        </div>
+        <div class="flex items-center space-x-4">
+          <select class="px-4 py-2 rounded-full shadow-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" [(ngModel)]="statusFilter" (ngModelChange)="filterUsers()">
+            <option value="">Tous</option>
+            <option value="actif">Actif</option>
+            <option value="inactif">Inactif</option>
+          </select>
+          <button class="flex items-center bg-gray-200 text-gray-700 px-4 py-2 rounded-full shadow-sm" (click)="openCreateUserModal()">
+            <i class="fas fa-plus mr-2"></i> Ajouter
+          </button>
+        </div>
+      </div>
+
+
+      <!-- Table -->
+      <div class="bg-white shadow-md rounded-lg overflow-x-auto">
+        <table class="min-w-full leading-normal">
+          <thead>
+            <tr>
+              <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                <input type="checkbox" (change)="toggleSelectAll($event)">
+              </th>
+              <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Prénom</th>
+              <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Nom</th>
+              <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Rôle</th>
+              <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Téléphone</th>
+              <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Email</th>
+              <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Organisme</th>
+              <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+              <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Statut</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of filteredUsers">
+              <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                <input type="checkbox" [checked]="isSelected(user)" (change)="toggleSelection(user, $event)">
+              </td>
+              <td class="px-2 py-2 border-b border-gray-200 bg-white text-sm">{{ user.prenom }}</td>
+              <td class="px-2 py-2 border-b border-gray-200 bg-white text-sm">{{ user.nom }}</td>
+              <td class="px-2 py-2 border-b border-gray-200 bg-white text-sm" [ngClass]="{'text-green-700': user.role === 'administrateur', 'text-red-600': user.role === 'agent'}">
+                {{ user.role }}
+              </td>
+              <td class="px-2 py-2 border-b border-gray-200 bg-white text-sm">{{ user.telephone }}</td>
+              <td class="px-2 py-2 border-b border-gray-200 bg-white text-sm">{{ user.email }}</td>
+              <td class="px-2 py-2 border-b border-gray-200 bg-white text-sm">{{ user.organisme }}</td>
+              <td class="px-2 py-2 border-b border-gray-200 bg-white text-sm">
+                <i class="fas fa-edit text-gray-600 mr-2" (click)="openEditUserModal(user)"></i>
+                <i class="fas fa-{{ user.archived ? 'undo' : 'archive' }} text-gray-600" (click)="user.archived ? unarchiveUser(user) : archiveUser(user)"></i>
+              </td>
+              <td class="px-2 py-2 border-b border-gray-200 bg-white text-sm">
+                <span class="relative inline-block px-3 py-1 font-semibold leading-tight" [ngClass]="{'text-green-900': !user.archived, 'text-red-900': user.archived}">
+                  <span aria-hidden class="absolute inset-0 rounded-full" [ngClass]="{'bg-green-200': !user.archived, 'bg-red-200': user.archived}" [style.opacity]="'0.5'"></span>
+                  <span class="relative">{{ user.archived ? 'Inactif' : 'Actif' }}</span>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="flex justify-center mt-4">
+        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+          <button class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50" (click)="prevPage()" [disabled]="currentPage === 1">
+            <span class="sr-only">Previous</span>
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+            Page {{ currentPage }} sur {{ Math.ceil(users.length / itemsPerPage) }}
+          </span>
+          <button class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50" (click)="nextPage()" [disabled]="(currentPage - 1) * itemsPerPage >= users.length">
+            <span class="sr-only">Next</span>
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Bulk Actions -->
+      <div class="flex justify-end mt-4">
+        <button *ngIf="selectedUsers.length > 0" class="bg-red-500 text-white px-4 py-2 rounded-md shadow-sm mr-2" (click)="archiveSelectedUsers()">Archiver sélectionnés</button>
+        <button *ngIf="selectedUsers.length > 0" class="bg-green-500 text-white px-4 py-2 rounded-md shadow-sm" (click)="unarchiveSelectedUsers()">Désarchiver sélectionnés</button>
+      </div>
+
+      <!-- <button class="btn btn-danger btn-sm mt-3" (click)="deleteSelectedUsers()" [disabled]="selectedUsers.length === 0">Supprimer les utilisateurs sélectionnés</button> -->
+    </div>
+  </div>
+</div>
+
+<!-- Modal d'édition -->
+<app-edit-user *ngIf="showEditUserModal && selectedUser" [user]="selectedUser" (closeModal)="closeEditUserModal()"></app-edit-user>
+
+<!-- Modal de création -->
+<app-user-create *ngIf="showCreateUserModal" (closeModal)="closeCreateUserModal()"></app-user-create>

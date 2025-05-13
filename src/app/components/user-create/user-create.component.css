@@ -1,0 +1,40 @@
+.modal-dialog {
+  max-width: 100%;
+  width: 600px; /* Ajustez la largeur selon vos besoins */
+  margin: 1.75rem auto;
+}
+
+.modal-content {
+  height: auto;
+  max-height: 90vh; /* Limite la hauteur à 90% de la hauteur de la fenêtre */
+  overflow-y: auto; /* Ajoute une barre de défilement si nécessaire */
+}
+
+.modal-header {
+  background-color: #F7E7D7;
+}
+
+.modal-body {
+  padding: 2rem;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-top: 1px solid #dee2e6;
+}
+
+.modal-footer .btn {
+  width: 48%;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.text-danger {
+  color: red;
+  font-size: 0.875rem;
+}

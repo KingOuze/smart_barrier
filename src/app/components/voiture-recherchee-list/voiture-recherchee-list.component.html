@@ -1,0 +1,153 @@
+<div class="flex h-screen">
+  <app-sidebar class="w-1/6 h-full"></app-sidebar>
+  <div class="w-5/6 p-4 bg-gray-100">
+    <app-top-bar></app-top-bar>
+    <div class="container mx-auto p-4">
+      <!-- Search and Add Button -->
+      <div class="flex justify-between items-center mb-4">
+        <div class="relative w-full max-w-lg">
+          <input type="text" class="pl-10 pr-4 py-2 rounded-full shadow-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full" placeholder="Rechercher par numero de plaque, model ou email" [(ngModel)]="searchQuery" (ngModelChange)="filterVoitures()">
+          <i class="fas fa-search absolute left-3 top-2.5 text-gray-400"></i>
+        </div>
+        <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded-full shadow-md flex items-center" *ngIf="isUser()" (click)="openCreateModal()">
+          <i class="fas fa-plus mr-2"></i> Ajouter une Voiture Recherchée
+        </button>
+      </div>
+      <div class="flex justify-between items-center mb-4">
+        <select class="px-4 py-2 rounded-full shadow-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" [(ngModel)]="statusFilter" (ngModelChange)="filterVoitures()">
+          <option value="">Tous</option>
+          <option value="true">Recherché</option>
+          <option value="false">Trouvé</option>
+        </select>
+        <div>
+          <button class="px-4 py-2 bg-red-500 text-white rounded-md" (click)="markSelectedAsRecherchees()" [disabled]="selectedVoitures.size === 0" *ngIf="selectedVoitures.size > 0">
+            Marquer comme recherché
+          </button>
+          <button class="px-4 py-2 bg-green-500 text-white rounded-md ml-2" (click)="markSelectedAsTrouvees()" [disabled]="selectedVoitures.size === 0" *ngIf="selectedVoitures.size > 0">
+            Marquer comme trouvé
+          </button>
+        </div>
+      </div>
+      <h2 class="text-center text-xl font-semibold mb-4">Liste des Voitures Recherchées</h2>
+      <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+        <thead>
+          <tr>
+            <th class="py-2 px-4 border-b">
+              <input type="checkbox" (change)="toggleSelectAll()" [checked]="areAllVoituresSelected()">
+            </th>
+            <th class="py-2 px-4 border-b">Plaque</th>
+            <th class="py-2 px-4 border-b">Modèle</th>
+            <th class="py-2 px-4 border-b">Téléphone</th>
+            <th class="py-2 px-4 border-b">Contact</th>
+            <th class="py-2 px-4 border-b" *ngIf="isUser()">Actions</th>
+            <th class="py-2 px-4 border-b" *ngIf="isUser()">Est Cible</th>
+            <th class="py-2 px-4 border-b">Statut</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let voiture of paginatedVoitures">
+            <td class="py-2 px-4 border-b">
+              <input type="checkbox" (change)="toggleSelection(voiture._id)" [checked]="isVoitureSelected(voiture._id)">
+            </td>
+            <td class="py-2 px-4 border-b">{{ voiture.plaque }}</td>
+            <td class="py-2 px-4 border-b">{{ voiture.modele }}</td>
+            <td class="py-2 px-4 border-b">{{ voiture.telephone }}</td>
+            <td class="py-2 px-4 border-b">{{ voiture.contact }}</td>
+            <td class="py-2 px-4 border-b" *ngIf="isUser()">
+              <button class="text-gray-500 mr-2" (click)="toggleArchiveVoiture(voiture._id, voiture.archived)">
+                <i class="fas" [ngClass]="{'fa-archive': !voiture.archived, 'fa-undo': voiture.archived}"></i>
+              </button>
+              <button class="text-gray-500" (click)="openUpdateModal(voiture)">
+                <i class="fas fa-edit"></i>
+              </button>
+            </td>
+            <td class="py-2 px-4 border-b" *ngIf="isUser()">
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" [checked]="voiture.estCible" (change)="toggleEstCible(voiture._id)" class="sr-only peer">
+                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+              </label>
+            </td>
+            <td class="py-2 px-4 border-b" [ngClass]="{'text-red-500': voiture.estCible, 'text-green-500': !voiture.estCible}">
+              {{ voiture.estCible ? 'recherché' : 'trouvé' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- Pagination -->
+      <div class="flex justify-center mt-4">
+        <nav class="flex items-center space-x-1">
+          <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-full" (click)="prevPage()" [disabled]="currentPage === 1">Précédent</button>
+          <span class="px-3 py-1">Page {{ currentPage }} de {{ totalPages }}</span>
+          <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-full" (click)="nextPage()" [disabled]="currentPage === totalPages">Suivant</button>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de création de voiture -->
+<div *ngIf="showCreateModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+  <div class="bg-white rounded-lg w-1/3">
+    <app-voiture-recherchee-create (closeModal)="closeCreateModal()"></app-voiture-recherchee-create>
+  </div>
+</div>
+
+<div *ngIf="showModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+  <div class="bg-white rounded-lg w-1/3">
+    <div class="p-4">
+      <div class="flex justify-between items-center border-b pb-2">
+        <h5 class="text-lg font-semibold">Mettre à jour la voiture</h5>
+        <button type="button" (click)="closeModal()">
+          <i class="fas fa-times text-gray-500"></i>
+        </button>
+      </div>
+      <div class="mt-4">
+        <form [formGroup]="voitureForm" (ngSubmit)="updateVoiture()" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Plaque <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="plaque" class="mt-1 block w-full rounded-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="plaque" [(ngModel)]="selectedVoiture.plaque" placeholder="e.g., AB123CD" (input)="formatPlaque($event)">
+            <div *ngIf="plaque?.invalid && (plaque?.dirty || plaque?.touched)" class="text-red-500 text-sm mt-1">
+                <div *ngIf="plaque?.errors?.['required']">Plaque est requise.</div>
+                <div *ngIf="plaque?.errors?.['pattern']">Le numéro de la plaque doit être au format AB123CD.</div>
+            </div>
+        </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Modèle <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="modele" class="mt-1 block w-full rounded-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="modele" [(ngModel)]="selectedVoiture.modele">
+            <div *ngIf="modele?.invalid && (modele?.dirty || modele?.touched)" class="text-red-500 text-sm mt-1">
+              Modèle est requis.
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Téléphone <span class="text-red-500">*</span></label>
+            <input type="tel" formControlName="telephone" class="mt-1 block w-full rounded-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="telephone" [(ngModel)]="selectedVoiture.telephone">
+            <div *ngIf="telephone?.invalid && (telephone?.dirty || telephone?.touched)" class="text-red-500 text-sm mt-1">
+              <div *ngIf="telephone?.errors?.['required']">Téléphone requis.</div>
+              <div *ngIf="telephone?.errors?.['min']">Téléphone doit être supérieur à 700000000.</div>
+              <div *ngIf="telephone?.errors?.['max']">Téléphone doit être inférieur à 789999999.</div>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Email <span class="text-red-500">*</span></label>
+            <input type="email" formControlName="contact" class="mt-1 block w-full rounded-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" id="contact" [(ngModel)]="selectedVoiture.contact">
+            <div *ngIf="contact?.invalid && (contact?.dirty || contact?.touched)" class="text-red-500 text-sm mt-1">
+              <div *ngIf="contact?.errors?.['required']">Email est requis.</div>
+              <div *ngIf="contact?.errors?.['email']">Veuillez entrer un format email valide.</div>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Est Cible <span class="text-red-500">*</span></label>
+            <select formControlName="estCible" class="mt-1 block w-full rounded-full border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+              <option [value]="true">Oui</option>
+              <option [value]="false">Non</option>
+            </select>
+          </div>
+          <div class="flex justify-end mt-4">
+            <button type="button" class="w-1/2 bg-red-600 text-white py-2 rounded-full mr-2" (click)="closeModal()">Annuler</button>
+            <button type="submit" class="w-1/2 bg-green-600 text-white py-2 rounded-full ml-2" [disabled]="!voitureForm.valid">Mettre à Jour</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

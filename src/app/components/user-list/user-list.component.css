@@ -1,0 +1,172 @@
+.flex {
+  display: flex;
+}
+
+.h-screen {
+  height: 100vh;
+}
+
+
+.container {
+  width: 100%;
+}
+
+.bg-gray-100 {
+  background-color: #f7fafc;
+}
+
+
+.min-w-full {
+  min-width: 100%;
+}
+
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+
+.shadow-md {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.border-gray-200 {
+  border-color: #edf2f7;
+}
+
+.bg-gray-100 {
+  background-color: #f7fafc;
+}
+
+.text-gray-600 {
+  color: #718096;
+}
+
+.text-xs {
+  font-size: 0.75rem;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+.tracking-wider {
+  letter-spacing: 0.05em;
+}
+
+
+.border-b-2 {
+  border-bottom-width: 2px;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-green-700 {
+  color: #2f855a;
+}
+
+.text-red-600 {
+  color: #e53e3e;
+}
+
+.bg-white {
+  background-color: #ffffff;
+}
+
+.border-gray-300 {
+  border-color: #e2e8f0;
+}
+
+.hover\:bg-gray-50:hover {
+  background-color: #f9fafb;
+}
+
+.relative {
+  position: relative;
+}
+
+.inline-flex {
+  display: inline-flex;
+}
+
+.items-center {
+  align-items: center;
+}
+
+
+.rounded-l-md {
+  border-top-left-radius: 0.375rem;
+  border-bottom-left-radius: 0.375rem;
+}
+
+.rounded-r-md {
+  border-top-right-radius: 0.375rem;
+  border-bottom-right-radius: 0.375rem;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.text-gray-500 {
+  color: #a0aec0;
+}
+
+.text-gray-700 {
+  color: #4a5568;
+}
+
+.bg-red-500 {
+  background-color: #f56565;
+}
+
+.bg-green-500 {
+  background-color: #48bb78;
+}
+
+.text-white {
+  color: #ffffff;
+}
+
+.mr-2 {
+  margin-right: 0.5rem;
+}
+
+.shadow-sm {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+.mt-3 {
+  margin-top: 0.75rem;
+}
+
+.btn-danger {
+  background-color: #e3342f;
+  color: #fff;
+}
+
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  border-radius: 0.2rem;
+}
