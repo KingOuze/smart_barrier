@@ -8,6 +8,7 @@ import { HistoriqueComponent } from './historique/historique.component';
 import { AuthentificationComponent } from './authentification/authentification.component';
 import { LogDetailsComponent } from './log-details/log-details.component';
 
+
 export const routes: Routes = [
   { path: '', component: AuthentificationComponent },
   { path:'login', component: AuthentificationComponent},
